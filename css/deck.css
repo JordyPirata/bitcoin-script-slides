@@ -251,3 +251,28 @@ input:focus{outline:none;border-color:var(--amber);}
   .slide.on,.stack-item.fresh{animation:none;}
   .progress span{transition:none;}
 }
+
+/* ---------- impresión: Ctrl+P y sale el PDF para repartir ----------
+   En pantalla solo existe la diapositiva activa; al imprimir tienen que salir todas,
+   una por página. Las que llevan máquina se imprimen en el estado en que estén, así
+   que conviene ejecutarlas antes (y abrir el acordeón) si se quiere el PDF completo.
+   Una diapositiva más alta que la página se parte en dos en vez de recortarse. */
+@media print{
+  @page{ size:landscape; margin:0; }
+  html,body{height:auto;overflow:visible;}
+  /* Sin esto Chrome tira los fondos y el tema oscuro sale en blanco. */
+  body{print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+
+  .progress,.esquina,.overlay,.run-controls,.sala-form{display:none !important;}
+
+  .slide{display:flex !important;break-after:page;}
+  .slide:last-child{break-after:auto;}
+  .slide,.slide.on{
+    min-height:100vh;max-height:none;overflow:visible;
+    animation:none;
+  }
+  .stack-item.fresh{animation:none;}
+
+  /* Un candado del acordeón no debe partirse por la mitad entre dos páginas. */
+  .familia details,.caja,.op-row{break-inside:avoid;}
+}

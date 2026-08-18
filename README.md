@@ -51,6 +51,24 @@ never loses your place.
 That is the address candado-lan prints when it starts, and it changes every time you present. The QR
 is generated in the browser and the URL is remembered in `localStorage`.
 
+## Handing it out
+
+The deck prints. `Ctrl+P` → *Save as PDF*, landscape, background graphics on, and every slide comes
+out on its own page — no extra tooling, same as everything else here.
+
+Two things to do **before** printing, because the slides print in whatever state they are in:
+
+```js
+// paste in the console
+document.querySelectorAll('details').forEach((d) => { d.removeAttribute('name'); d.open = true; });
+document.querySelectorAll('[data-todo]').forEach((b) => b.click());
+```
+
+That opens every lock in the accordion and runs every machine to completion, so the tapes and stacks
+show a finished execution instead of an empty box. The accordion slide is taller than one page and
+spills onto two or three — `break-inside: avoid` keeps each lock whole, so it splits between entries
+rather than through one.
+
 ## The stack machine
 
 `js/vm.js` is a small, general Script interpreter: a script is a string, it gets tokenised on spaces,

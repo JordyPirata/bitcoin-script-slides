@@ -16,6 +16,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# El PDF se regenera desde el propio deck (ver README): no se versiona.
+*.pdf
+
 # ejecución
 *.log
 .env
