@@ -1,0 +1,85 @@
+/* ------------------------------------------------------------------
+   Paleta "Candado LAN" — tema oscuro cálido (sepia/taller)
+   Extraída de public/css/app.css. Portable: sin dependencias.
+
+   Fuentes originales (Google Fonts, vendorizadas como woff2 locales):
+     Zilla Slab 600/700 · Inter 400/500/600 · JetBrains Mono 400/500/600
+   Si no las vendorizas, los fallback de --serif/--sans/--mono ya sirven.
+   ------------------------------------------------------------------ */
+
+:root{
+  /* --- fondos --- */
+  --bg:#12100e;          /* lienzo, casi negro con tinte cálido */
+  --surface:#1c1815;     /* tarjetas, inputs, modal */
+  --surface-2:#231e19;   /* nivel elevado: sub-tarjetas, pila, toast */
+
+  /* --- texto y separadores --- */
+  --ink:#ede6da;         /* texto principal, hueso */
+  --dim:#8a8175;         /* texto secundario, etiquetas, placeholders */
+  --rule:#332c25;        /* todos los bordes de 1px */
+
+  /* --- acentos (los tres únicos colores) --- */
+  --amber:#c98a2c;       /* primario: marca, botones, opcodes, enlaces */
+  --verdigris:#4fa88c;   /* éxito: verificado, candado abierto, "tú" */
+  --rust:#b5482f;        /* error/peligro: fallo, llave privada, offline */
+
+  /* --- derivados: acento sobre relleno sólido ámbar --- */
+  --on-amber:#1a1409;
+
+  /* --- tipografía --- */
+  --serif:'Zilla Slab', Georgia, serif;                         /* títulos */
+  --sans:'Inter', system-ui, -apple-system, sans-serif;         /* cuerpo, botones */
+  --mono:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; /* hashes, código, chips */
+}
+
+/* ------------------------------------------------------------------
+   Recetas de los acentos. La regla es siempre la misma terna:
+     relleno .06–.15  ·  borde .35–.40  ·  texto = el color puro
+   ------------------------------------------------------------------ */
+:root{
+  --amber-fill:rgba(201,138,44,.10);
+  --amber-fill-soft:rgba(201,138,44,.07);
+  --amber-line:rgba(201,138,44,.35);
+
+  --verdigris-fill:rgba(79,168,140,.08);
+  --verdigris-line:rgba(79,168,140,.38);
+
+  --rust-fill:rgba(181,72,47,.08);
+  --rust-line:rgba(181,72,47,.40);
+
+  --dim-fill:rgba(138,129,117,.12);
+}
+
+/* Fondo del lienzo: dos halos muy tenues, ámbar arriba-izquierda y
+   verdigrís abajo-derecha. Es lo que evita que el negro se vea plano. */
+body{
+  background:
+    radial-gradient(ellipse at top left, rgba(201,138,44,.06), transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(79,168,140,.05), transparent 50%),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.5;
+  min-height:100vh;
+}
+
+/* Barra superior translúcida sobre el mismo --bg */
+.topbar-bg{ background:rgba(18,16,14,.92); backdrop-filter:blur(8px); }
+/* Velo del modal */
+.overlay-bg{ background:rgba(10,9,8,.82); backdrop-filter:blur(3px); }
+
+/* ------------------------------------------------------------------
+   Geometría que acompaña a la paleta (para que se vea igual, no solo
+   con los mismos colores)
+   ------------------------------------------------------------------ */
+:root{
+  --r-pill:20px;   /* chips y tags */
+  --r-sm:5px;      /* celdas de la pila, valores */
+  --r-md:6px;      /* botones, inputs, líneas de script */
+  --r-lg:10px;     /* tarjetas */
+  --r-xl:12px;     /* modal */
+}
+
+/* Avatar por persona: tono estable derivado del hash160, misma
+   saturación/luminosidad para todos —> conviven sin pelearse. */
+/* hue = parseInt(pkh.slice(0,4), 16) % 360;  background: hsl(hue 55% 62%) */

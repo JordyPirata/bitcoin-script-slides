@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>Bitcoin Script — qué es, para qué sirve y cómo funciona</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/deck.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🔐</text></svg>">
+</head>
+<body>
+
+<div class="progress"><span id="progressBar"></span></div>
+<div class="esquina der" id="contador">1 / 16</div>
+
+<main id="deck">
+
+<!-- 1 -->
+<section class="slide centro">
+  <div class="inner">
+    <div class="eyebrow">Una charla sobre el lenguaje más simple del mundo</div>
+    <h1>Bitcoin Script</h1>
+    <p class="lead">Qué es, para qué sirve y cómo funciona.</p>
+    <p class="small" style="margin-top:2em">
+      Se navega con <b class="mono">→</b> y <b class="mono">←</b>. <b class="mono">?</b> muestra los atajos.<br>
+      Al final entran ustedes.
+    </p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="inner dos">
+    <div>
+      <div class="eyebrow">El problema</div>
+      <h1>Mover valor sin nadie que lleve la cuenta</h1>
+    </div>
+    <div>
+      <ul class="puntos body">
+        <li>Un banco resuelve esto con una <b>tabla</b>: una fila por cuenta, un saldo por fila. Quien manda en la tabla manda en el dinero.</li>
+        <li>Si quitamos al banco, hay que quitar la tabla. Y entonces alguien tiene que responder a la única pregunta que importa: <b>¿puede esta persona gastar esto?</b></li>
+        <li>La respuesta de Bitcoin no es una lista de dueños. Es un <b>programa diminuto</b> que acompaña a cada moneda.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">El giro conceptual</div>
+    <h1>Las monedas no tienen dueño</h1>
+    <div class="dos" style="margin-top:1em">
+      <p class="lead">Una moneda de Bitcoin —un <span class="mono">UTXO</span>— no lleva un nombre escrito.
+        Lleva <b style="color:var(--amber)">un candado</b>.</p>
+      <div>
+        <ul class="puntos body">
+          <li>Nadie «tiene» bitcoin. Existen candados, y hay quien sabe abrirlos.</li>
+          <li>Gastar = presentarse con algo que <b>abre</b> ese candado.</li>
+          <li>Tu saldo es la suma de los candados que sabes abrir. No está escrito en ningún sitio: se deduce.</li>
+        </ul>
+        <p class="small" style="margin-top:1.2em">Si esta diapositiva queda clara, el resto de la charla es mecánica.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">El mapa de toda la charla</div>
+    <h1>Un candado solo sabe hacer tres preguntas</h1>
+    <div class="tres" style="margin-top:.8em">
+      <div class="caja">
+        <div class="rotulo">¿Quién eres?</div>
+        <p class="script-line"><span class="op">OP_CHECKSIG</span> <span class="op">OP_CHECKMULTISIG</span></p>
+        <p class="body" style="margin-top:.6em">Demuestra que controlas una llave. Una, o <b>m de n</b>.</p>
+      </div>
+      <div class="caja">
+        <div class="rotulo">¿Qué sabes?</div>
+        <p class="script-line"><span class="op">OP_HASH160</span> <span class="op">OP_EQUALVERIFY</span></p>
+        <p class="body" style="margin-top:.6em">Enseña un <b>secreto</b> que encaja con un hash grabado de antemano.</p>
+      </div>
+      <div class="caja">
+        <div class="rotulo">¿Cuándo?</div>
+        <p class="script-line"><span class="op">OP_CHECKLOCKTIMEVERIFY</span></p>
+        <p class="body" style="margin-top:.6em">No antes de tal bloque. O no hasta <b>N bloques después</b>.</p>
+      </div>
+    </div>
+    <div class="dos" style="margin-top:1em">
+      <ul class="puntos body">
+        <li><b>Llave + tiempo</b> = una bóveda: si en 90 días no la muevo yo, la abre mi llave de respaldo.</li>
+        <li><b>Secreto + tiempo</b> = un HTLC, y encadenados, Lightning.</li>
+        <li><b>m de n + tiempo</b> = una herencia, o una tesorería con salida de emergencia.</li>
+      </ul>
+      <div>
+        <p class="lead">Script no sirve para <i>programar</i>. Sirve para <b style="color:var(--amber)">poner
+          condiciones</b>, y con tres tipos que se combinan sale casi todo.</p>
+        <p class="small" style="margin-top:.8em">Los nombres en mayúsculas no hay que aprendérselos ahora:
+          el resto de la charla es ir abriendo esas tres cajas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="inner dos ancha-izq">
+    <div>
+      <div class="eyebrow">Entonces</div>
+      <h1>¿Qué es Script?</h1>
+      <p class="lead">Un lenguaje diminuto cuya única función es describir <b style="color:var(--amber)">la condición para gastar</b>.</p>
+    </div>
+    <div>
+      <ul class="puntos body">
+        <li class="no">No transfiere nada.</li>
+        <li class="no">No tiene cuentas ni saldos.</li>
+        <li class="no">No sabe cuánto vale la moneda.</li>
+        <li class="si">Solo dice <b class="mono" style="color:var(--verdigris)">sí</b> o <b class="mono" style="color:var(--rust)">no</b>.</li>
+      </ul>
+      <div class="caja destacada" style="margin-top:1.4em">
+        <p class="body">Cada nodo de la red ejecuta ese programa por su cuenta antes de aceptar la transacción.
+          Nadie se fía del resultado ajeno.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">Y esto es lo raro</div>
+    <h1>Lo que Script <span style="color:var(--rust)">no</span> es</h1>
+    <div class="dos" style="margin-top:1em">
+      <ul class="puntos body">
+        <li class="no">Sin bucles.</li>
+        <li class="no">Sin recursión.</li>
+        <li class="no">Sin variables.</li>
+        <li class="no">No lee el resto de la cadena.</li>
+        <li class="no">No sabe qué hora es.</li>
+      </ul>
+      <div>
+        <div class="caja destacada">
+          <h3>Y eso es a propósito</h3>
+          <p class="body">Este programa lo van a ejecutar <b>miles de máquinas ajenas</b>, gratis, para siempre.
+            Tiene que terminar siempre y dar exactamente el mismo resultado en todas.</p>
+        </div>
+        <p class="lead" style="margin-top:1em;color:var(--amber)">Aburrido = seguro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-demo="pila">
+  <div class="inner">
+    <div class="eyebrow">La máquina</div>
+    <h1>Una pila. Nada más.</h1>
+    <div class="dos ancha-izq" style="margin-top:1em">
+      <div class="demo"></div>
+      <div>
+        <ul class="puntos body">
+          <li>Solo hay dos gestos: <b>apilar</b> un dato, y <b>operar</b> sobre lo que está arriba.</li>
+          <li>Lo último que entra es lo primero que sale. Como un montón de platos.</li>
+          <li>Un script se lee de izquierda a derecha y no vuelve atrás nunca.</li>
+        </ul>
+        <p class="small" style="margin-top:1.2em">No hay memoria, ni registros, ni nombres. Todo lo que existe está en esa columna.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-demo="suma">
+  <div class="inner">
+    <div class="eyebrow">Primer script</div>
+    <h1 class="mono" style="font-family:var(--mono);font-size:clamp(24px,3.4vw,44px)">2 3 OP_ADD 5 OP_EQUAL</h1>
+    <div class="dos ancha-izq" style="margin-top:1em">
+      <div class="demo"></div>
+      <div>
+        <ul class="puntos body">
+          <li>Los <b style="color:var(--verdigris)">datos</b> se apilan.</li>
+          <li>Los <b style="color:var(--amber)">opcodes</b> consumen lo de arriba y dejan el resultado.</li>
+          <li>Si al final el tope es verdadero, el script <b>pasa</b>.</li>
+        </ul>
+        <p class="small" style="margin-top:1.2em">Ya saben leer Bitcoin Script. El resto son opcodes distintos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">Anatomía de un gasto</div>
+    <h1>El candado y la llave los pone gente distinta</h1>
+    <div class="dos" style="margin-top:1.2em">
+      <div class="caja">
+        <span class="tag lock">scriptPubKey</span>
+        <h3 style="margin-top:.4em">El candado</h3>
+        <p class="body">Lo puso <b>quien recibió</b> la moneda, cuando la recibió. Vive en la cadena.</p>
+        <p class="script-line" style="margin-top:.8em"><span class="op">OP_DUP</span> <span class="op">OP_HASH160</span> <span class="data">&lt;hash&gt;</span> <span class="op">OP_EQUALVERIFY</span> <span class="op">OP_CHECKSIG</span></p>
+      </div>
+      <div class="caja">
+        <span class="tag unlock">scriptSig</span>
+        <h3 style="margin-top:.4em">La llave</h3>
+        <p class="body">La pone <b>quien gasta</b>, ahora. Va en la transacción nueva.</p>
+        <p class="script-line" style="margin-top:.8em"><span class="data">&lt;firma&gt;</span> <span class="data">&lt;llave pública&gt;</span></p>
+      </div>
+    </div>
+    <div class="caja" style="margin-top:1.2em">
+      <p class="small">Durante años los dos se concatenaban y se ejecutaban como un solo programa. Hoy se ejecutan
+        <b>por separado</b>: primero la llave, y la pila que deja se le pasa al candado. El cambio vino con P2SH, porque
+        concatenar permitía a un tercero reescribir el <span class="mono">scriptSig</span> por el camino y cambiar el
+        identificador de la transacción sin invalidarla — <i>malleability</i>. Separarlos también fuerza que el
+        <span class="mono">scriptSig</span> sea solo datos, sin opcodes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-demo="familia">
+  <div class="inner">
+    <div class="eyebrow">Una familia, no un candado</div>
+    <h1>Los candados que existen</h1>
+    <div class="demo"></div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">Dos opcodes pegados</div>
+    <h1><span class="mono op" style="font-family:var(--mono)">OP_EQUALVERIFY</span> no deja respuesta</h1>
+    <div class="dos" style="margin-top:1em">
+      <div>
+        <p class="lead">Es <b style="color:var(--amber)">dos opcodes fundidos</b> en un solo byte.</p>
+        <p class="body" style="margin-top:.8em"><span class="mono op">OP_EQUAL</span> saca los dos elementos de
+          arriba, los compara y apila <span class="mono" style="color:var(--verdigris)">TRUE</span> o
+          <span class="mono" style="color:var(--rust)">FALSE</span>.</p>
+        <p class="body" style="margin-top:.8em"><span class="mono op">OP_VERIFY</span> mira ese tope: si es
+          verdadero lo tira y sigue; si es falso, <b>mata el script ahí mismo</b>.</p>
+        <p class="body" style="margin-top:.8em">Juntos son el opcode 136, <span class="mono">0x88</span>. Y el
+          resultado intermedio nunca llega a verse: o el script continúa como si nada, o no continúa.</p>
+      </div>
+      <div>
+        <div class="caja destacada">
+          <div class="rotulo">Por qué importa</div>
+          <p class="body">Con <span class="mono op">OP_EQUAL</span> el script sigue corriendo con un
+            <span class="mono">FALSE</span> encima. Con <span class="mono op">OP_EQUALVERIFY</span> no hay
+            siguiente opcode.</p>
+        </div>
+        <ul class="puntos body" style="margin-top:.6em">
+          <li class="si">Si coinciden: no apila nada. La pila queda dos elementos más corta y a otra cosa.</li>
+          <li class="no">Si no coinciden: el script termina inválido en el sitio, sin veredicto que consultar.</li>
+          <li>Casi toda la familia <span class="mono">*VERIFY</span> funciona igual:
+            <span class="mono">OP_CHECKSIGVERIFY</span>, <span class="mono">OP_NUMEQUALVERIFY</span>…</li>
+        </ul>
+        <p class="small" style="margin-top:.4em">En P2PKH esto significa que, con la llave equivocada, la firma
+          <b>ni siquiera se comprueba</b>: el script ya está muerto cuando llega el turno.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">El nombre engaña</div>
+    <h1><span class="mono op" style="font-family:var(--mono)">OP_CHECKSIG</span> no firma nada</h1>
+    <div class="dos" style="margin-top:1em">
+      <div>
+        <p class="lead"><b style="color:var(--amber)">Comprueba</b> una firma que ya venía hecha.</p>
+        <p class="body" style="margin-top:.8em">Firmar ocurre antes y en otro sitio: en la cartera de quien gasta, con la llave
+          privada, que nunca toca la cadena. Para cuando el script se ejecuta, la firma ya es un dato más.</p>
+        <p class="body" style="margin-top:.8em">El opcode saca dos cosas de la pila —la firma arriba, la llave pública debajo—,
+          reconstruye por su cuenta el mensaje que debería haberse firmado, y apila <span class="mono" style="color:var(--verdigris)">TRUE</span>
+          o <span class="mono" style="color:var(--rust)">FALSE</span>.</p>
+      </div>
+      <div>
+        <div class="caja destacada">
+          <div class="rotulo">Ese mensaje: el sighash</div>
+          <p class="body">No es «la transacción». Es un <b>mensaje construido</b> copiando trozos de ella según unas reglas
+            fijas, con SHA-256 aplicado dos veces.</p>
+        </div>
+        <ul class="puntos body" style="margin-top:.5em">
+          <li>Cada nodo lo reconstruye solo. Si no le sale el mismo, la firma no valida.</li>
+          <li>Cambia un byte de la transacción y esa firma <b>muere</b>: no se despega de una para pegarla en otra.</li>
+          <li>Qué trozos se copian lo elige el byte de <span class="mono">SIGHASH</span> pegado a la firma:
+            <span class="mono">SIGHASH_ALL</span>, firmarlo todo, en el 99% de los casos.</li>
+        </ul>
+        <p class="small" style="margin-top:.4em">Aquí el mensaje es un texto corto, no un sighash real: la mecánica es la
+          misma, la serialización no. La firma sí es de verdad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-demo="fallos">
+  <div class="inner">
+    <div class="eyebrow">Cuando falla</div>
+    <h1>Dos fallos que hay que saber distinguir</h1>
+    <div class="demo"></div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <div class="inner">
+    <div class="eyebrow">El tiempo entra en escena</div>
+    <h1>Candados que esperan</h1>
+    <div class="dos" style="margin-top:1em">
+      <div>
+        <p class="script-line"><span class="data">&lt;bloque 800000&gt;</span> <span class="op">OP_CHECKLOCKTIMEVERIFY</span> <span class="op">OP_DROP</span> <span class="data">&lt;pubkey&gt;</span> <span class="op">OP_CHECKSIG</span></p>
+        <p class="body" style="margin-top:1em">«Esto no se abre hasta el bloque 800000, y después solo con esta llave.»</p>
+        <p class="small" style="margin-top:1em"><span class="mono">OP_CHECKSEQUENCEVERIFY</span> es la misma idea en relativo:
+          «después de N bloques desde que esta moneda existe».</p>
+      </div>
+      <div>
+        <ul class="puntos body">
+          <li>Script no sabe qué hora es, pero <b>sí puede preguntar por la altura del bloque</b> que lo está incluyendo. Eso basta.</li>
+          <li>Combinado con un hash secreto, sale un <b>HTLC</b>: «te lo doy si revelas el secreto, o me lo devuelvo si no lo haces a tiempo».</li>
+          <li>Un HTLC repetido a lo largo de una cadena de pares es, literalmente, <b>Lightning</b>.</li>
+        </ul>
+        <p class="small" style="margin-top:1.2em">Los <i>timelocks</i> son la pieza que convierte a Script de «cerradura» en «contrato».</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-demo="recursos">
+  <div class="inner">
+    <div class="eyebrow">Para seguir tirando del hilo</div>
+    <h1>Dónde aprender esto en serio</h1>
+    <div class="demo" style="margin-top:1em"></div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide centro" data-demo="qr">
+  <div class="inner">
+    <div class="eyebrow">Y ahora lo hacen ustedes</div>
+    <h1>Candado LAN</h1>
+    <p class="lead">Cada quien genera una llave en su teléfono, cierra un candado a nombre de alguien de la sala,
+      y ve el script correr opcode por opcode.</p>
+    <div class="demo" style="margin-top:1.4em"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="overlay overlay-bg" id="ayuda">
+  <div class="modal">
+    <h2>Atajos</h2>
+    <div class="atajos">
+      <kbd>→</kbd><span>Siguiente paso, o siguiente diapositiva</span>
+      <kbd>←</kbd><span>Anterior</span>
+      <kbd>espacio</kbd><span>Igual que →</span>
+      <kbd>Inicio</kbd> <span>Primera diapositiva</span>
+      <kbd>Fin</kbd><span>Última diapositiva</span>
+      <kbd>r</kbd><span>Reinicia la máquina de esta diapositiva</span>
+      <kbd>?</kbd><span>Esta ayuda</span>
+    </div>
+    <p class="small" style="margin-top:1.2em">Un mando de proyector suele mandar <b class="mono">AvPág</b> y <b class="mono">RePág</b>: también sirven.</p>
+    <div class="run-controls"><button class="secondary" id="cerrarAyuda">Cerrar</button></div>
+  </div>
+</div>
+
+<script src="vendor/elliptic.min.js"></script>
+<script src="vendor/crypto-js.min.js"></script>
+<script src="vendor/qrcode.min.js"></script>
+<script>
+// Sin vendor/ no hay criptografía ni fuentes. Mejor decir el comando exacto que
+// dejar que el deck falle a medias en mitad del P2PKH, delante de la sala.
+(function () {
+  var faltan = ['elliptic', 'CryptoJS', 'qrcode'].filter(function (n) { return !window[n]; });
+  if (!faltan.length) return;
+  window.CL = { sinVendor: true };
+  document.addEventListener('DOMContentLoaded', function () {
+    var aviso = document.createElement('div');
+    aviso.className = 'aviso-vendor';
+    aviso.innerHTML = '<div><h1>Falta <span class="mono">vendor/</span></h1>' +
+      '<p class="body" style="margin-top:.6em">No se cargaron: ' + faltan.join(', ') + '.</p>' +
+      '<code>./build-vendor.sh</code>' +
+      '<p class="small" style="margin-top:1em">Si candado-lan ya corrió en esta máquina, es una copia local y no hace falta red.</p></div>';
+    document.body.appendChild(aviso);
+  });
+})();
+</script>
+<script src="js/keys.js"></script>
+<script src="js/vm.js"></script>
+<script src="js/vm-ui.js"></script>
+<script src="js/demos.js"></script>
+<script src="js/deck.js"></script>
+</body>
+</html>

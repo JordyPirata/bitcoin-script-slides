@@ -1,0 +1,253 @@
+/* Diapositivas. Se carga después de theme.css, que ya pone la paleta, el fondo y
+   las tipografías; aquí solo hay geometría y escala.
+
+   La escala es lo único que no viene de candado-lan: aquella app se diseñó para un
+   teléfono a 30 cm, y esto tiene que leerse desde la última fila de una sala.
+
+   El objetivo es el proyector, y solo el proyector: no hay diseño para pantallas
+   estrechas. En un teléfono se verá apretado y no pasa nada. */
+
+/* Cada tamaño mira el ancho Y el alto. Un proyector de 1280×720 es ancho y bajo: si
+   la escala solo mirara vw, la de los dos fallos —tres botones, siete opcodes y un
+   resultado— se saldría por abajo justo en la resolución para la que se diseñó. */
+:root{
+  --t-eyebrow:clamp(12px,min(1.1vw,1.9vh),17px);
+  --t-title:clamp(30px,min(5vw,7.6vh),64px);
+  --t-lead:clamp(19px,min(2.6vw,3.9vh),36px);
+  --t-body:clamp(18px,min(2.2vw,3.1vh),30px);
+  --t-small:clamp(15px,min(1.5vw,2.2vh),21px);
+  --t-mono:clamp(15px,min(1.4vw,2.3vh),22px);
+  --t-mono-sm:clamp(13px,min(1.15vw,1.9vh),18px);
+}
+
+*{box-sizing:border-box;}
+/* Varias reglas de aquí ponen display, y eso le gana al [hidden] del navegador. */
+[hidden]{display:none !important;}
+html,body{margin:0;padding:0;height:100%;}
+body{-webkit-text-size-adjust:100%;overflow:hidden;}
+a{color:var(--amber);}
+h1,h2,h3{font-family:var(--serif);margin:0;font-weight:600;letter-spacing:-.015em;}
+p{margin:0;}
+.mono{font-family:var(--mono);}
+
+/* ---------- la diapositiva ---------- */
+
+/* Solo se pinta la activa: sin scroll de página, la barra espaciadora no se pelea
+   con la navegación y no hay forma de quedarse a medio camino entre dos. */
+.slide{display:none;}
+.slide.on{
+  display:flex;align-items:center;justify-content:center;
+  /* "safe" para que, si algún día una diapositiva no cupiera, se recorte por abajo y
+     el título siga alcanzable en vez de quedar por encima del borde superior. */
+  align-items:safe center;
+  min-height:100dvh;max-height:100dvh;overflow-y:auto;
+  padding:clamp(20px,min(4vw,5vh),64px);
+  animation:entrar .22s ease;
+}
+@keyframes entrar{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.inner{width:100%;max-width:1500px;}
+.slide.centro .inner{max-width:1100px;text-align:center;}
+
+.eyebrow{
+  font-family:var(--mono);font-size:var(--t-eyebrow);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:.7em;
+}
+.slide h1{font-size:var(--t-title);line-height:1.06;margin-bottom:.5em;}
+.slide h2{font-size:var(--t-lead);margin-bottom:.5em;}
+.lead{font-size:var(--t-lead);line-height:1.35;max-width:26ch;}
+.slide.centro .lead{max-width:none;margin-inline:auto;}
+.body{font-size:var(--t-body);line-height:1.45;color:var(--ink);}
+.dim{color:var(--dim);}
+.small{font-size:var(--t-small);color:var(--dim);line-height:1.5;}
+
+.puntos{list-style:none;padding:0;margin:0;display:grid;gap:.7em;}
+.puntos li{
+  font-size:var(--t-body);line-height:1.35;
+  padding-left:1.4em;position:relative;
+}
+.puntos li::before{content:'—';position:absolute;left:0;color:var(--amber);}
+.puntos li.no::before{content:'✕';color:var(--rust);}
+.puntos li.si::before{content:'✓';color:var(--verdigris);}
+.puntos b{color:var(--amber);font-weight:600;}
+
+.dos{display:grid;gap:clamp(20px,3vw,44px);align-items:start;grid-template-columns:1fr 1fr;}
+.dos.ancha-izq{grid-template-columns:1.35fr 1fr;}
+.tres{display:grid;gap:clamp(14px,2vw,28px);align-items:stretch;grid-template-columns:repeat(3,1fr);}
+
+.caja{
+  background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-lg);
+  padding:clamp(14px,1.6vw,24px);
+}
+.caja h3{font-size:var(--t-lead);margin-bottom:.35em;}
+.caja.ok{border-color:var(--verdigris-line);background:var(--verdigris-fill);}
+.caja.mal{border-color:var(--rust-line);background:var(--rust-fill);}
+.caja.destacada{border-color:var(--amber-line);background:var(--amber-fill-soft);}
+
+.rotulo{
+  font-family:var(--mono);font-size:var(--t-eyebrow);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:.6em;
+}
+
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:var(--t-mono-sm);
+  letter-spacing:.08em;text-transform:uppercase;padding:.3em .8em;
+  border-radius:var(--r-pill);white-space:nowrap;
+}
+.tag.lock{background:var(--amber-fill);color:var(--amber);border:1px solid var(--amber-line);}
+.tag.unlock{background:var(--verdigris-fill);color:var(--verdigris);border:1px solid var(--verdigris-line);}
+.tag.muted{background:var(--dim-fill);color:var(--dim);border:1px solid var(--rule);}
+.tag.bad{background:var(--rust-fill);color:var(--rust);border:1px solid var(--rust-line);}
+
+/* ---------- scripts: mismos nombres de clase que candado-lan ---------- */
+
+/* Se envuelve en vez de desplazarse: el script completo tiene que verse de un vistazo. */
+.script-line{
+  font-family:var(--mono);font-size:var(--t-mono);background:var(--surface);
+  border:1px solid var(--rule);border-radius:var(--r-md);
+  padding:.6em .8em;line-height:1.9;white-space:normal;word-break:break-word;
+}
+.op{color:var(--amber);}
+.data{color:var(--verdigris);}
+
+/* ---------- la máquina: cinta + pila ---------- */
+
+.sim-grid{display:grid;grid-template-columns:1fr minmax(200px,26%);gap:clamp(14px,2vw,28px);align-items:start;}
+.tape{display:flex;flex-direction:column;gap:.35em;}
+.op-row{
+  font-family:var(--mono);font-size:var(--t-mono);padding:.45em .7em;border-radius:var(--r-sm);
+  background:var(--surface-2);border:1px solid var(--rule);color:var(--dim);
+  display:flex;justify-content:space-between;gap:1em;align-items:baseline;
+}
+.op-row .name{color:var(--ink);white-space:nowrap;}
+.op-row.current{border-color:var(--amber);background:var(--amber-fill);}
+.op-row.current .name{color:var(--amber);font-weight:600;}
+.op-row.done{opacity:.42;}
+.op-row.muerto{border-color:var(--rust-line);background:var(--rust-fill);opacity:1;}
+.op-row.muerto .name{color:var(--rust);font-weight:600;}
+.op-row .desc{color:var(--dim);font-size:var(--t-mono-sm);text-align:right;}
+
+.stack{
+  display:flex;flex-direction:column-reverse;gap:.4em;min-height:8em;
+  background:var(--surface-2);border:1px solid var(--rule);border-radius:var(--r-lg);padding:.6em;
+}
+.stack-label{
+  font-family:var(--mono);font-size:var(--t-eyebrow);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:.4em;
+}
+.stack-item{
+  font-family:var(--mono);font-size:var(--t-mono-sm);background:var(--surface);
+  border:1px solid var(--rule);border-radius:var(--r-sm);
+  padding:.5em;text-align:center;word-break:break-all;
+}
+/* Solo el elemento recién apilado se anima; si no, la pila entera parpadea en cada paso. */
+.stack-item.fresh{animation:pop .25s ease;}
+.stack-item.good{border-color:var(--verdigris);color:var(--verdigris);}
+.stack-item.bad{border-color:var(--rust);color:var(--rust);}
+@keyframes pop{from{transform:translateY(6px) scale(.92);opacity:0;}to{transform:none;opacity:1;}}
+
+.result{
+  margin-top:.7em;padding:.6em .8em;border-radius:var(--r-md);
+  font-family:var(--mono);font-size:var(--t-mono-sm);line-height:1.5;
+  border:1px solid var(--rule);display:none;
+}
+.result.show{display:block;}
+.result.ok{border-color:var(--verdigris-line);background:var(--verdigris-fill);color:var(--verdigris);}
+.result.fail{border-color:var(--rust-line);background:var(--rust-fill);color:var(--rust);}
+
+.run-controls{display:flex;gap:.5em;flex-wrap:wrap;margin-top:.7em;}
+
+/* ---------- botones y campos ---------- */
+
+button{
+  font-family:var(--sans);font-weight:600;font-size:var(--t-small);
+  background:var(--amber);color:var(--on-amber);border:none;border-radius:var(--r-md);
+  padding:.5em 1.1em;cursor:pointer;transition:filter .15s, transform .1s;
+}
+button:hover{filter:brightness(1.1);}
+button:active{transform:scale(.98);}
+button:disabled{opacity:.35;cursor:not-allowed;}
+button.secondary{background:transparent;color:var(--ink);border:1px solid var(--rule);}
+button.secondary:hover{border-color:var(--dim);}
+button.tiny{padding:.35em .8em;font-size:var(--t-mono-sm);}
+
+input[type=text]{
+  width:100%;background:var(--surface);border:1px solid var(--rule);color:var(--ink);
+  border-radius:var(--r-md);padding:.5em .7em;font-family:var(--mono);font-size:var(--t-small);
+}
+input:focus{outline:none;border-color:var(--amber);}
+
+/* ---------- acordeón de la familia de candados ---------- */
+
+.familia{display:grid;gap:.5em;}
+.familia details{
+  background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-md);
+  padding:.5em .9em;
+}
+.familia details[open]{border-color:var(--amber-line);background:var(--amber-fill-soft);}
+.familia summary{
+  cursor:pointer;font-family:var(--mono);font-size:var(--t-mono);color:var(--ink);
+  display:flex;gap:.8em;align-items:baseline;flex-wrap:wrap;
+}
+.familia summary::marker{color:var(--amber);}
+.familia summary .anio{color:var(--dim);font-size:var(--t-mono-sm);}
+.familia .cuerpo{padding:.7em 0 .3em;display:grid;gap:.6em;}
+
+/* ---------- cierre: el QR ---------- */
+
+.qr{background:var(--ink);padding:clamp(10px,1.4vw,20px);border-radius:var(--r-lg);display:inline-block;}
+/* El 30vh es lo que evita que el QR empuje la URL fuera de la pantalla en un
+   proyector de 720 de alto: escaneable sigue siendo desde cualquier butaca. */
+.qr svg,.qr img{display:block;width:min(340px,52vw,30vh);height:auto;image-rendering:pixelated;}
+/* Dos a la vez en la diapositiva de recursos: caben más pequeños y siguen escaneándose. */
+.qr.chico svg{width:min(190px,19vh);}
+.caja .mono.small[data-url]{margin-top:.5em;color:var(--amber);word-break:break-all;}
+.sala-url{
+  font-family:var(--mono);font-size:clamp(16px,2.4vw,32px);color:var(--amber);
+  word-break:break-all;margin:.6em 0;
+}
+.sala-form{display:flex;gap:.5em;max-width:640px;margin:0 auto;}
+.sala-form input{flex:1;}
+
+/* ---------- cromo del deck ---------- */
+
+.progress{position:fixed;top:0;left:0;right:0;height:3px;background:var(--rule);z-index:50;}
+.progress span{display:block;height:100%;width:0;background:var(--amber);transition:width .22s ease;}
+
+.esquina{
+  position:fixed;bottom:14px;font-family:var(--mono);font-size:var(--t-mono-sm);
+  color:var(--dim);z-index:50;
+}
+.esquina.der{right:16px;}
+
+/* El velo lo pone .overlay-bg, que ya viene en theme.css: aquí solo la geometría. */
+.overlay{
+  position:fixed;inset:0;display:none;
+  align-items:center;justify-content:center;padding:20px;z-index:60;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-xl);
+  padding:clamp(18px,2.4vw,32px);max-width:640px;width:100%;
+}
+.modal h2{font-size:var(--t-lead);margin-bottom:.6em;}
+.atajos{display:grid;grid-template-columns:auto 1fr;gap:.5em 1.2em;font-size:var(--t-small);}
+.atajos kbd{
+  font-family:var(--mono);font-size:var(--t-mono-sm);background:var(--surface-2);
+  border:1px solid var(--rule);border-radius:var(--r-sm);padding:.15em .5em;white-space:nowrap;
+}
+
+/* Si falta vendor/, esto es lo único que se ve: el comando exacto, no un error raro. */
+.aviso-vendor{
+  position:fixed;inset:0;z-index:90;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;
+}
+.aviso-vendor code{
+  font-family:var(--mono);color:var(--amber);background:var(--surface);
+  border:1px solid var(--amber-line);border-radius:var(--r-md);padding:.4em .8em;
+  display:inline-block;margin-top:.8em;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .slide.on,.stack-item.fresh{animation:none;}
+  .progress span{transition:none;}
+}

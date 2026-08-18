@@ -1,0 +1,22 @@
+# Librerías y fuentes del navegador: no se versionan.
+# Antes de la primera charla hay que generarlas:  npm run vendor
+# (si candado-lan ya corrió en esta máquina, es una copia local y no hace falta red)
+vendor/
+
+# El proyecto no tiene dependencias: package.json solo declara los scripts.
+node_modules/
+package-lock.json
+.npm/
+
+# sistema y editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# ejecución
+*.log
+.env
+.env.local

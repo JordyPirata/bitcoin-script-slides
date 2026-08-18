@@ -1,0 +1,17 @@
+{
+  "name": "bitcoin-script-slides",
+  "version": "1.0.0",
+  "description": "A projector-ready deck about Bitcoin Script with a live stack machine: type a script, watch it execute opcode by opcode, and see OP_EQUALVERIFY abort on the wrong key. Opens from file://, no build, no dependencies.",
+  "keywords": ["bitcoin", "script", "p2pkh", "opcodes", "secp256k1", "slides", "talk", "education", "offline"],
+  "license": "MIT",
+  "author": "JordyPirata",
+  "type": "commonjs",
+  "engines": { "node": ">=18" },
+  "files": ["index.html", "build-vendor.sh", "css/", "js/", "test/"],
+  "scripts": {
+    "vendor": "bash build-vendor.sh",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
